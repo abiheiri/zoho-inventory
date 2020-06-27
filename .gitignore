@@ -1,0 +1,4 @@
+.vscode
+Pipfile*
+*.swp
+auth.conf
