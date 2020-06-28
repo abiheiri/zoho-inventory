@@ -2,3 +2,4 @@
 Pipfile*
 *.swp
 auth.conf
+token.txt
