@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -37,11 +38,19 @@ func getToken(username, apikey string) {
 	body, err := ioutil.ReadAll(res.Body)
 
 	// s := strings.Split(string(body),"=")
-	fmt.Println(string(body))
+	// fmt.Println(string(body))
 	// fmt.Println(s[1])
 
-	//r := regexp.MustCompile(`(?P<first>.*)`)
-	// fmt.Printf("%#v\n", r.FindStringSubmatch(`2015-05-27`))
-	//fmt.Printf(string(body), r.SubexpNames())
+	var re = regexp.MustCompile(`AUTHTOKEN=(?P<token>\S+)`)
+	var str = string(body)
+	match := re.FindStringSubmatch(str)
+	fmt.Printf("TOKEN: %s", match[1])
 
+	// r, err := regexp.MatchString(`AUTHTOKEN=(.*)`, string(body))
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// fmt.Println(string(r))
 }
