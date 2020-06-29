@@ -17,20 +17,22 @@ func main() {
 		fmt.Print(err)
 	}
 
-	s := strings.Split(string(f), ",")
+    s := strings.Split(string(f), ",")
+    
 
-	username, apikey := s[0], s[1]
+	username, apikey, organization := s[0], s[1], s[2]
 	// fmt.Println(username, apikey)
 
     // Is there an existing token?
 	t, err := ioutil.ReadFile("token.txt")
 	if err != nil {
 		getToken(username, apikey)
-	}
-
-	token := (string(t))
-	fmt.Println(token)
-
+    }
+    
+    token := (string(t))
+    // fmt.Println(token)
+    // _ = t
+    
     // Create flags
     // inv -g -i=all
     getPtr := flag.String("g", "get", "a string")
@@ -47,13 +49,36 @@ func main() {
     // fmt.Println("svar:", svar)
     fmt.Println("tail:", flag.Args())
 
-
+    // -get items
     if getPtr != nil {
-        fmt.Println("word:", *getPtr)
+        // fmt.Println("word:", *getPtr)
+            goGet(token, organization)
     }
 
     
 
+}
+
+func goGet (token, organization string) {
+    url := "https://inventory.zoho.com/api/v1/items?organization_id=" + organization
+    method := "GET"
+
+    client := &http.Client {
+    }
+    req, err := http.NewRequest(method, url, nil)
+
+    if err != nil {
+        fmt.Println(err)
+    }
+    req.Header.Add("Authorization", "Zoho-authtoken " + token)
+    req.Header.Add("Content-Type", "application/json")
+
+
+    res, err := client.Do(req)
+    defer res.Body.Close()
+    body, err := ioutil.ReadAll(res.Body)
+
+    fmt.Println(string(body))
 }
 
 func getToken(username, apikey string) {
